@@ -1,0 +1,165 @@
+.apikey-page {
+    padding: 32px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.apikey-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.apikey-header h1 {
+    font-size: 28px;
+    color: #1a1a2e;
+    margin: 0 0 12px 0;
+}
+
+.apikey-header p {
+    color: #666;
+    font-size: 15px;
+    margin: 0;
+}
+
+.apikey-loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.apikey-error {
+    background: #fef2f2;
+    color: #dc2626;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.apikey-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 16px;
+    padding: 32px;
+    color: white;
+    margin-bottom: 32px;
+}
+
+.apikey-display {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px 24px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.apikey-display code {
+    font-family: 'Courier New', monospace;
+    font-size: 15px;
+    word-break: break-all;
+}
+
+.apikey-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-primary {
+    background: #4a90d9;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #357abd;
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: #dc2626;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.usage-section {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.usage-section h2 {
+    font-size: 20px;
+    color: #1a1a2e;
+    margin: 0 0 24px 0;
+}
+
+.usage-block {
+    margin-bottom: 24px;
+}
+
+.usage-block:last-child {
+    margin-bottom: 0;
+}
+
+.usage-block h3 {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 12px 0;
+    font-weight: 600;
+}
+
+.usage-block pre {
+    background: #1a1a2e;
+    color: #a5d6ff;
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    overflow-x: auto;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.usage-block ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.usage-block li {
+    margin-bottom: 8px;
+    color: #444;
+    font-size: 14px;
+}
+
+.usage-block code {
+    background: #f0f4f8;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    color: #4a90d9;
+}

@@ -15,4 +15,7 @@ router.use(apiKeyMiddleware);
 // GET /api/anime?q={query} - Search anime via Jikan API (Gateway)
 router.get("/anime", animeController.searchAnime);
 
+// GET /api/manga?q={query} - Search manga via Jikan API (Gateway)
+router.get("/manga", animeController.searchManga);
+
 module.exports = router;
