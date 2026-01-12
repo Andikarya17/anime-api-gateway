@@ -8,8 +8,15 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background: #1c1c1c;
+    color: #fff;
 }
 
 code {
     font-family: 'Courier New', Courier, monospace;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
 }

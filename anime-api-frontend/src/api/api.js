@@ -3,10 +3,9 @@ import axios from 'axios';
 /**
  * API Service
  * 
- * Axios instance configured for the Anime API Gateway.
- * - Base URL from environment variable
- * - JWT token automatically attached to Authorization header
- * - API key automatically attached to X-API-Key header
+ * Axios instance for the Anime API Gateway.
+ * - JWT token attached to Authorization header
+ * - API key attached to X-API-Key header
  */
 const api = axios.create({
     baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:3000',
@@ -33,15 +32,24 @@ api.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// Response interceptor - Handle 401 errors
+// Response interceptor - Handle 401 only for auth routes
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('apiKey');
-            window.location.href = '/login';
+        const status = error.response?.status;
+        const url = error.config?.url || '';
+
+        // Only auto-logout on 401 for auth-related endpoints
+        if (status === 401) {
+            const isAuthRoute = url.includes('/auth/') || url.includes('/user/') || url.includes('/admin/');
+
+            if (isAuthRoute) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('apiKey');
+                window.location.href = '/login';
+            }
         }
+
         return Promise.reject(error);
     }
 );
@@ -59,9 +67,17 @@ export const userAPI = {
     regenerateApiKey: () => api.post('/user/api-key/regenerate'),
 };
 
-// Gateway test endpoint
-export const testGateway = (endpoint) => {
-    return api.get(endpoint);
+// Admin endpoints
+export const adminAPI = {
+    getUsers: () => api.get('/admin/users'),
+    getLogs: () => api.get('/admin/logs'),
+};
+
+// Search endpoints (API Gateway)
+export const searchAPI = {
+    anime: (query) => api.get('/api/anime', { params: { q: query } }),
+    animeById: (id) => api.get(`/api/anime/${id}`),
+    manga: (query) => api.get('/api/manga', { params: { q: query } }),
 };
 
 export default api;

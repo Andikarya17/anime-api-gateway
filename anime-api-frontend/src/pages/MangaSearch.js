@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import api from '../api/api';
+import { Link } from 'react-router-dom';
+import { searchAPI } from '../api/api';
 import './Search.css';
 
 /**
  * MangaSearch Page
  * 
- * MyAnimeList-style manga search using the API Gateway.
- * All requests go through /api/manga with X-API-Key header.
+ * MyAnimeList-style manga search.
  */
 const MangaSearch = () => {
     const [query, setQuery] = useState('');
@@ -24,10 +24,14 @@ const MangaSearch = () => {
         setHasSearched(true);
 
         try {
-            const response = await api.get('/api/manga', { params: { q: query } });
+            const response = await searchAPI.manga(query);
             setResults(response.data.data || []);
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to search manga');
+            if (err.response?.status === 401 || err.response?.status === 403) {
+                setError('API access denied. Please check your API key.');
+            } else {
+                setError(err.response?.data?.message || 'Failed to search manga');
+            }
             setResults([]);
         } finally {
             setLoading(false);
@@ -41,9 +45,9 @@ const MangaSearch = () => {
 
     return (
         <div className="search-page">
-            <div className="search-header">
-                <h1>📚 Manga Search</h1>
-                <p>Search for manga, manhwa, and light novels</p>
+            <div className="search-hero">
+                <h1>Manga Search</h1>
+                <p>Search from thousands of manga, manhwa, and light novels</p>
             </div>
 
             <form onSubmit={handleSearch} className="search-form">
@@ -51,7 +55,7 @@ const MangaSearch = () => {
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search manga... (e.g., One Piece, Berserk, Chainsaw Man)"
+                    placeholder="Search manga titles..."
                 />
                 <button type="submit" disabled={loading}>
                     {loading ? 'Searching...' : 'Search'}
@@ -61,54 +65,55 @@ const MangaSearch = () => {
             {error && <div className="search-error">{error}</div>}
 
             <div className="search-results">
-                {loading && <div className="search-loading">Searching for manga...</div>}
+                {loading && (
+                    <div className="search-loading">
+                        <div className="spinner"></div>
+                        <p>Searching manga...</p>
+                    </div>
+                )}
 
-                {!loading && hasSearched && results.length === 0 && (
+                {!loading && hasSearched && results.length === 0 && !error && (
                     <div className="search-empty">
-                        <span className="empty-icon">🔍</span>
                         <p>No manga found for "{query}"</p>
-                        <span className="empty-hint">Try a different search term</span>
                     </div>
                 )}
 
                 {!loading && results.length > 0 && (
                     <>
-                        <div className="results-count">{results.length} results found</div>
-                        <div className="results-grid">
+                        <div className="results-header">
+                            <span className="results-count">Found {results.length} manga</span>
+                        </div>
+                        <div className="results-list">
                             {results.map((manga) => (
-                                <div key={manga.mal_id} className="result-card">
-                                    <div className="card-image">
+                                <div key={manga.mal_id} className="result-item">
+                                    <div className="item-image">
                                         <img
-                                            src={manga.images?.jpg?.image_url || '/placeholder.png'}
+                                            src={manga.images?.jpg?.image_url}
                                             alt={manga.title}
                                             loading="lazy"
                                         />
-                                        {manga.score && (
-                                            <div className="card-score">★ {manga.score}</div>
-                                        )}
                                     </div>
-                                    <div className="card-content">
-                                        <h3 className="card-title">{manga.title}</h3>
-                                        <div className="card-meta">
-                                            <span className="meta-item">{manga.type || 'Unknown'}</span>
-                                            <span className="meta-item">{getYear(manga)}</span>
-                                            {manga.chapters && (
-                                                <span className="meta-item">{manga.chapters} ch</span>
-                                            )}
-                                            {manga.volumes && (
-                                                <span className="meta-item">{manga.volumes} vol</span>
-                                            )}
-                                        </div>
-                                        {manga.status && (
-                                            <div className={`card-status status-${manga.status.toLowerCase().replace(/\s+/g, '-')}`}>
-                                                {manga.status}
-                                            </div>
+                                    <div className="item-content">
+                                        <h3 className="item-title">{manga.title}</h3>
+                                        {manga.title_english && manga.title_english !== manga.title && (
+                                            <p className="item-title-alt">{manga.title_english}</p>
                                         )}
-                                        <p className="card-synopsis">
+                                        <div className="item-meta">
+                                            <span className="meta-type">{manga.type || 'Manga'}</span>
+                                            <span className="meta-episodes">
+                                                {manga.chapters ? `${manga.chapters} chapters` : 'Unknown chapters'}
+                                            </span>
+                                            <span className="meta-year">{getYear(manga)}</span>
+                                        </div>
+                                        <p className="item-synopsis">
                                             {manga.synopsis
-                                                ? manga.synopsis.slice(0, 120) + '...'
-                                                : 'No synopsis available'}
+                                                ? manga.synopsis.slice(0, 200) + '...'
+                                                : 'No synopsis available.'}
                                         </p>
+                                    </div>
+                                    <div className="item-score">
+                                        <div className="score-value">{manga.score || 'N/A'}</div>
+                                        <div className="score-label">Score</div>
                                     </div>
                                 </div>
                             ))}

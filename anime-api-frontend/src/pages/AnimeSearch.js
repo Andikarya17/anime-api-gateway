@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import api from '../api/api';
+import { Link } from 'react-router-dom';
+import { searchAPI } from '../api/api';
 import './Search.css';
 
 /**
  * AnimeSearch Page
  * 
- * MyAnimeList-style anime search using the API Gateway.
- * All requests go through /api/anime with X-API-Key header.
+ * MyAnimeList-style anime search with card grid.
+ * Clicking a result navigates to anime detail page.
  */
 const AnimeSearch = () => {
     const [query, setQuery] = useState('');
@@ -24,10 +25,14 @@ const AnimeSearch = () => {
         setHasSearched(true);
 
         try {
-            const response = await api.get('/api/anime', { params: { q: query } });
+            const response = await searchAPI.anime(query);
             setResults(response.data.data || []);
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to search anime');
+            if (err.response?.status === 401 || err.response?.status === 403) {
+                setError('API access denied. Please check your API key.');
+            } else {
+                setError(err.response?.data?.message || 'Failed to search anime');
+            }
             setResults([]);
         } finally {
             setLoading(false);
@@ -42,9 +47,9 @@ const AnimeSearch = () => {
 
     return (
         <div className="search-page">
-            <div className="search-header">
-                <h1>🎬 Anime Search</h1>
-                <p>Search for anime series, movies, and OVAs</p>
+            <div className="search-hero">
+                <h1>Anime Search</h1>
+                <p>Search from thousands of anime series, movies, and OVAs</p>
             </div>
 
             <form onSubmit={handleSearch} className="search-form">
@@ -52,7 +57,7 @@ const AnimeSearch = () => {
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search anime... (e.g., Naruto, One Piece, Attack on Titan)"
+                    placeholder="Search anime titles..."
                 />
                 <button type="submit" disabled={loading}>
                     {loading ? 'Searching...' : 'Search'}
@@ -62,53 +67,61 @@ const AnimeSearch = () => {
             {error && <div className="search-error">{error}</div>}
 
             <div className="search-results">
-                {loading && <div className="search-loading">Searching for anime...</div>}
+                {loading && (
+                    <div className="search-loading">
+                        <div className="spinner"></div>
+                        <p>Searching anime...</p>
+                    </div>
+                )}
 
-                {!loading && hasSearched && results.length === 0 && (
+                {!loading && hasSearched && results.length === 0 && !error && (
                     <div className="search-empty">
-                        <span className="empty-icon">🔍</span>
                         <p>No anime found for "{query}"</p>
-                        <span className="empty-hint">Try a different search term</span>
                     </div>
                 )}
 
                 {!loading && results.length > 0 && (
                     <>
-                        <div className="results-count">{results.length} results found</div>
-                        <div className="results-grid">
+                        <div className="results-header">
+                            <span className="results-count">Found {results.length} anime</span>
+                        </div>
+                        <div className="results-list">
                             {results.map((anime) => (
-                                <div key={anime.mal_id} className="result-card">
-                                    <div className="card-image">
+                                <Link
+                                    to={`/anime/${anime.mal_id}`}
+                                    key={anime.mal_id}
+                                    className="result-item"
+                                >
+                                    <div className="item-image">
                                         <img
-                                            src={anime.images?.jpg?.image_url || '/placeholder.png'}
+                                            src={anime.images?.jpg?.image_url}
                                             alt={anime.title}
                                             loading="lazy"
                                         />
-                                        {anime.score && (
-                                            <div className="card-score">★ {anime.score}</div>
-                                        )}
                                     </div>
-                                    <div className="card-content">
-                                        <h3 className="card-title">{anime.title}</h3>
-                                        <div className="card-meta">
-                                            <span className="meta-item">{anime.type || 'Unknown'}</span>
-                                            <span className="meta-item">{getYear(anime)}</span>
-                                            {anime.episodes && (
-                                                <span className="meta-item">{anime.episodes} eps</span>
-                                            )}
-                                        </div>
-                                        {anime.status && (
-                                            <div className={`card-status status-${anime.status.toLowerCase().replace(/\s+/g, '-')}`}>
-                                                {anime.status}
-                                            </div>
+                                    <div className="item-content">
+                                        <h3 className="item-title">{anime.title}</h3>
+                                        {anime.title_english && anime.title_english !== anime.title && (
+                                            <p className="item-title-alt">{anime.title_english}</p>
                                         )}
-                                        <p className="card-synopsis">
+                                        <div className="item-meta">
+                                            <span className="meta-type">{anime.type || 'TV'}</span>
+                                            <span className="meta-episodes">
+                                                {anime.episodes ? `${anime.episodes} episodes` : 'Unknown episodes'}
+                                            </span>
+                                            <span className="meta-year">{getYear(anime)}</span>
+                                        </div>
+                                        <p className="item-synopsis">
                                             {anime.synopsis
-                                                ? anime.synopsis.slice(0, 120) + '...'
-                                                : 'No synopsis available'}
+                                                ? anime.synopsis.slice(0, 200) + '...'
+                                                : 'No synopsis available.'}
                                         </p>
                                     </div>
-                                </div>
+                                    <div className="item-score">
+                                        <div className="score-value">{anime.score || 'N/A'}</div>
+                                        <div className="score-label">Score</div>
+                                    </div>
+                                </Link>
                             ))}
                         </div>
                     </>

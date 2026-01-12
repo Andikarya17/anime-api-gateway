@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { authAPI } from '../api/api';
+import { authAPI, userAPI } from '../api/api';
 import { decodeToken } from '../auth/auth';
 import './Login.css';
 
 /**
  * Login Page
+ * 
+ * Redirects based on user role:
+ * - Admin → /admin
+ * - User → /dashboard/anime
  */
 const Login = () => {
     const navigate = useNavigate();
@@ -24,12 +28,34 @@ const Login = () => {
         setError('');
 
         try {
+            // Login and get token
             const response = await authAPI.login(formData.username, formData.password);
 
             if (response.data.success && response.data.token) {
-                localStorage.setItem('token', response.data.token);
-                const decoded = decodeToken(response.data.token);
-                navigate('/dashboard');
+                const token = response.data.token;
+                localStorage.setItem('token', token);
+
+                // Decode token to get role
+                const decoded = decodeToken(token);
+
+                // Fetch and store API key for users (needed for search)
+                if (decoded?.role !== 'admin') {
+                    try {
+                        const apiKeyResponse = await userAPI.getApiKey();
+                        if (apiKeyResponse.data?.data?.api_key) {
+                            localStorage.setItem('apiKey', apiKeyResponse.data.data.api_key);
+                        }
+                    } catch (err) {
+                        console.warn('Could not fetch API key:', err);
+                    }
+                }
+
+                // Redirect based on role
+                if (decoded?.role === 'admin') {
+                    navigate('/admin');
+                } else {
+                    navigate('/dashboard/anime');
+                }
             }
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed');
@@ -41,7 +67,7 @@ const Login = () => {
     return (
         <div className="auth-container">
             <div className="auth-card">
-                <h1>Anime API Gateway</h1>
+                <h1>🎌 Anime Gateway</h1>
                 <p className="subtitle">Sign in to your account</p>
 
                 <form onSubmit={handleSubmit} className="auth-form">
