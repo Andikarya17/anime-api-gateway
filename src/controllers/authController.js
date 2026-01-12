@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const { User } = require("../models");
 
 // POST /auth/register
@@ -32,11 +33,15 @@ const register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create new user with hashed password
+        // Generate cryptographically secure API key (32 bytes = 64 hex chars)
+        const apiKey = crypto.randomBytes(32).toString("hex");
+
+        // Create new user with hashed password and API key
         // Role is NOT set from request - it defaults to "user" in the model
         const user = await User.create({
             username,
             password: hashedPassword,
+            api_key: apiKey,
             // role is intentionally omitted - defaults to "user"
         });
 

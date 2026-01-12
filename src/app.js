@@ -17,7 +17,8 @@ app.use(express.json());
 // Connect to database and sync models
 connectDB().then(() => {
   // Sync all models (creates tables if they don't exist)
-  sequelize.sync({ alter: false }).then(() => {
+  // alter: true will add new columns like api_key
+  sequelize.sync({ alter: true }).then(() => {
     console.log("Database tables synced");
   });
 });

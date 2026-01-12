@@ -1,12 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const animeController = require("../controllers/animeController");
-const authMiddleware = require("../middlewares/authMiddleware");
+const apiKeyMiddleware = require("../middlewares/apiKeyMiddleware");
 
-// All routes in this file require JWT authentication
-router.use(authMiddleware);
+// ═══════════════════════════════════════════════════════════════════════════
+// API GATEWAY ROUTES - Protected by API Key (NOT JWT)
+// ═══════════════════════════════════════════════════════════════════════════
+// All routes in this file require a valid X-API-Key header.
+// This allows external clients (curl, Postman, other apps) to consume the API.
+// ═══════════════════════════════════════════════════════════════════════════
 
-// GET /api/anime?q={query} - Search anime via Jikan API
+router.use(apiKeyMiddleware);
+
+// GET /api/anime?q={query} - Search anime via Jikan API (Gateway)
 router.get("/anime", animeController.searchAnime);
 
 module.exports = router;

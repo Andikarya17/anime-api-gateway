@@ -63,7 +63,7 @@ const searchAnime = async (req, res) => {
         // This ensures every request is tracked for auditing purposes
         try {
             await ApiLog.create({
-                userId: req.user.userId,
+                userId: req.apiUser.id, // From apiKeyMiddleware (API key auth)
                 // Use req.originalUrl for dynamic endpoint logging (scalable design)
                 endpoint: req.originalUrl.split("?")[0], // Remove query string from path
                 // Store ALL query parameters as JSON string (generic, not just 'q')

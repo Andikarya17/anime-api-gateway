@@ -30,6 +30,12 @@ const User = sequelize.define(
             type: DataTypes.ENUM("admin", "user"),
             defaultValue: "user",
         },
+        api_key: {
+            type: DataTypes.STRING(64),
+            allowNull: true,
+            unique: true,
+            comment: "Unique API key for gateway access",
+        },
         last_login_at: {
             type: DataTypes.DATE,
             allowNull: true,
