@@ -1,0 +1,236 @@
+.dashboard {
+    min-height: 100vh;
+    background: #f5f5f5;
+}
+
+.dashboard-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 14px;
+}
+
+.logout-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.dashboard-main {
+    padding: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: #1a1a2e;
+}
+
+.card>p {
+    margin: 0 0 20px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.api-key-card {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: white;
+}
+
+.api-key-card h2 {
+    color: white;
+}
+
+.api-key-card>p {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.key-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.key-display code {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 14px;
+    flex: 1;
+    min-width: 200px;
+    word-break: break-all;
+}
+
+.key-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.key-actions button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.key-actions button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.key-actions button.danger {
+    background: #ef4444;
+    border-color: #ef4444;
+}
+
+.key-actions button.danger:hover:not(:disabled) {
+    background: #dc2626;
+}
+
+.key-actions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.usage-example {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.usage-example h3 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.usage-example pre {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    overflow-x: auto;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.tester-form {
+    margin-bottom: 16px;
+}
+
+.input-row {
+    display: flex;
+    gap: 12px;
+}
+
+.input-row input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: monospace;
+}
+
+.input-row input:focus {
+    outline: none;
+    border-color: #4a90d9;
+}
+
+.input-row button {
+    background: #4a90d9;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.input-row button:hover:not(:disabled) {
+    background: #357abd;
+}
+
+.input-row button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.loading {
+    color: #666;
+    font-size: 14px;
+}
+
+.error {
+    background: #fef2f2;
+    color: #dc2626;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.result {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.result h3 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.result pre {
+    background: #1a1a2e;
+    color: #a5d6ff;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    overflow-x: auto;
+    margin: 0;
+    max-height: 400px;
+    overflow-y: auto;
+}
