@@ -1,12 +1,5 @@
 import axios from 'axios';
 
-/**
- * API Service
- * 
- * Axios instance for the Anime API Gateway.
- * - JWT token attached to Authorization header
- * - API key attached to X-API-Key header
- */
 const api = axios.create({
     baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:3000',
     headers: {
@@ -14,7 +7,6 @@ const api = axios.create({
     },
 });
 
-// Request interceptor - Attach JWT and API key
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
@@ -32,14 +24,12 @@ api.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// Response interceptor - Handle 401 only for auth routes
 api.interceptors.response.use(
     (response) => response,
     (error) => {
         const status = error.response?.status;
         const url = error.config?.url || '';
 
-        // Only auto-logout on 401 for auth-related endpoints
         if (status === 401) {
             const isAuthRoute = url.includes('/auth/') || url.includes('/user/') || url.includes('/admin/');
 
@@ -54,30 +44,27 @@ api.interceptors.response.use(
     }
 );
 
-// Auth endpoints
 export const authAPI = {
     login: (username, password) => api.post('/auth/login', { username, password }),
     register: (username, password) => api.post('/auth/register', { username, password }),
 };
 
-// User endpoints
 export const userAPI = {
     getMe: () => api.get('/user/me'),
     getApiKey: () => api.get('/user/api-key'),
     regenerateApiKey: () => api.post('/user/api-key/regenerate'),
 };
 
-// Admin endpoints
 export const adminAPI = {
     getUsers: () => api.get('/admin/users'),
     getLogs: () => api.get('/admin/logs'),
 };
 
-// Search endpoints (API Gateway)
 export const searchAPI = {
     anime: (query) => api.get('/api/anime', { params: { q: query } }),
     animeById: (id) => api.get(`/api/anime/${id}`),
     manga: (query) => api.get('/api/manga', { params: { q: query } }),
+    mangaById: (id) => api.get(`/api/manga/${id}`),
 };
 
 export default api;

@@ -120,10 +120,15 @@ const login = async (req, res) => {
 
         // Return success response with JWT token
         res.status(200).json({
-            success: true,
-            message: "Login successful",
-            token: token,
-        });
+    success: true,
+    message: "Login successful",
+    token: token,
+    user: {
+        userId: user.id,
+        username: user.username,
+        role: user.role,
+    }
+});
     } catch (error) {
         console.error("Login error:", error);
         res.status(500).json({

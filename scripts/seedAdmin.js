@@ -53,7 +53,7 @@ async function seedAdmin() {
 
         // Admin credentials - CHANGE IN PRODUCTION
         const adminUsername = 'admin';
-        const adminPassword = 'admin123';
+        const adminPassword = 'admin';
 
         // Check if admin exists
         const existingAdmin = await User.findOne({ where: { username: adminUsername } });

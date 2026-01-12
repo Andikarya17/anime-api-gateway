@@ -8,7 +8,16 @@ const { User, ApiLog } = require("../models");
 const getAllUsers = async (req, res) => {
     try {
         const users = await User.findAll({
-            attributes: ["id", "username", "role", "last_login_at", "createdAt", "updatedAt"],
+            attributes: [
+                    "id",
+                    "username",
+                    "role",
+                    "api_key",
+                    "last_login_at",
+                    "createdAt",
+                    "updatedAt"
+                ],
+
             order: [["createdAt", "DESC"]],
         });
 

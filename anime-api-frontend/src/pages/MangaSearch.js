@@ -3,11 +3,6 @@ import { Link } from 'react-router-dom';
 import { searchAPI } from '../api/api';
 import './Search.css';
 
-/**
- * MangaSearch Page
- * 
- * MyAnimeList-style manga search.
- */
 const MangaSearch = () => {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
@@ -85,7 +80,11 @@ const MangaSearch = () => {
                         </div>
                         <div className="results-list">
                             {results.map((manga) => (
-                                <div key={manga.mal_id} className="result-item">
+                                <Link
+                                    key={manga.mal_id}
+                                    to={`/manga/${manga.mal_id}`}
+                                    className="result-item"
+                                >
                                     <div className="item-image">
                                         <img
                                             src={manga.images?.jpg?.image_url}
@@ -115,7 +114,7 @@ const MangaSearch = () => {
                                         <div className="score-value">{manga.score || 'N/A'}</div>
                                         <div className="score-label">Score</div>
                                     </div>
-                                </div>
+                                </Link>
                             ))}
                         </div>
                     </>

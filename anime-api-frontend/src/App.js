@@ -6,20 +6,12 @@ import Register from './pages/Register';
 import AnimeSearch from './pages/AnimeSearch';
 import MangaSearch from './pages/MangaSearch';
 import AnimeDetail from './pages/AnimeDetail';
+import MangaDetail from './pages/MangaDetail';
 import UserDashboard from './pages/UserDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import { isAuthenticated, getCurrentUser } from './auth/auth';
 import './App.css';
 
-/**
- * App Component - Role-Based Router
- * 
- * Routes:
- * - /login, /register - Public
- * - /dashboard/* - User only
- * - /anime/:id - User only (anime detail)
- * - /admin - Admin only
- */
 function App() {
     const getHomeRedirect = () => {
         if (!isAuthenticated()) return '/login';
@@ -30,14 +22,11 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {/* Root redirect */}
                 <Route path="/" element={<Navigate to={getHomeRedirect()} replace />} />
 
-                {/* Public routes */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
 
-                {/* User routes */}
                 <Route
                     path="/dashboard"
                     element={
@@ -52,7 +41,6 @@ function App() {
                     <Route path="api" element={<UserDashboard />} />
                 </Route>
 
-                {/* Anime Detail (User only) */}
                 <Route
                     path="/anime/:id"
                     element={
@@ -62,7 +50,15 @@ function App() {
                     }
                 />
 
-                {/* Admin routes */}
+                <Route
+                    path="/manga/:id"
+                    element={
+                        <UserRoute>
+                            <MangaDetail />
+                        </UserRoute>
+                    }
+                />
+
                 <Route
                     path="/admin"
                     element={
@@ -72,7 +68,6 @@ function App() {
                     }
                 />
 
-                {/* Catch all */}
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </BrowserRouter>
